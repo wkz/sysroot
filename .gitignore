@@ -1,0 +1,6 @@
+*~
+*.tar.*
+/*-obj/
+/*-sysroot-*/
+/busybox-*/
+/linux-*/
