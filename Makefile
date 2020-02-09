@@ -15,6 +15,7 @@ tc = $(1)-unknown-linux-gnu$(if $(filter $(1),arm),eabi,)
 karch = $(if $(filter $(1),aarch64),arm64,$(1))
 kbuild = $(MAKE) CROSS_COMPILE=$(call tc,$(2))- ARCH=$(call karch,$(2)) O=../$(3) \
 		-C $(1) $(4)
+kinstall = $(if $(filter $(1),arm),zinstall,install)
 
 %-$(sysroot).tar.xz: %-$(sysroot)/init
 	tar cJf $@ $(dir $<)
@@ -30,7 +31,7 @@ kbuild = $(MAKE) CROSS_COMPILE=$(call tc,$(2))- ARCH=$(call karch,$(2)) O=../$(3
 	+$(call kbuild,$(kernel-dir),$*,$(dir $<),INSTALL_HDR_PATH=$(CURDIR)/$*-$(sysroot)/usr headers_install)
 
 %-$(sysroot)/boot/vmlinuz-$(kernel-ver): %-kernel-obj/vmlinux |%-$(sysroot)/boot
-	+$(call kbuild,$(kernel-dir),$*,$(dir $<),INSTALL_PATH=$(CURDIR)/$(dir $@) install)
+	+$(call kbuild,$(kernel-dir),$*,$(dir $<),INSTALL_PATH=$(CURDIR)/$(dir $@) $(call kinstall,$*))
 
 %-kernel-menuconfig: $(kernel-dir)/Makefile |%-kernel-obj
 	$(call kbuild,$(kernel-dir),$*,$|,menuconfig)
