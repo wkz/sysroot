@@ -1,3 +1,5 @@
+CONFIG ?= menuconfig
+
 kernel-ver := 5.5.1
 kernel-maj := $(word 1,$(subst ., ,$(kernel-ver)))
 kernel-dir := linux-$(kernel-ver)
@@ -33,8 +35,8 @@ kinstall = $(if $(filter $(1),arm),zinstall,install)
 %-$(sysroot)/boot/vmlinuz-$(kernel-ver): %-kernel-obj/vmlinux |%-$(sysroot)/boot
 	+$(call kbuild,$(kernel-dir),$*,$(dir $<),INSTALL_PATH=$(CURDIR)/$(dir $@) $(call kinstall,$*))
 
-%-kernel-menuconfig: $(kernel-dir)/Makefile |%-kernel-obj
-	$(call kbuild,$(kernel-dir),$*,$|,menuconfig)
+%-kernel-config: $(kernel-dir)/Makefile |%-kernel-obj
+	$(call kbuild,$(kernel-dir),$*,$|,$(CONFIG))
 
 %-kernel-obj/vmlinux: %-kernel-obj/.config |%-kernel-obj
 	+$(call kbuild,$(kernel-dir),$*,$|)
@@ -52,8 +54,8 @@ $(kernel-tar):
 	+$(call kbuild,$(busybox-dir),$*,$(dir $<),install) && \
 		cp -a $(dir $<)/_install/* $*-$(sysroot)/
 
-%-busybox-menuconfig: $(busybox-dir)/Makefile |%-busybox-obj
-	$(call kbuild,$(busybox-dir),$*,$|,menuconfig)
+%-busybox-config: $(busybox-dir)/Makefile |%-busybox-obj
+	$(call kbuild,$(busybox-dir),$*,$|,$(CONFIG))
 
 %-busybox-obj/busybox: %-busybox-obj/.config |%-busybox-obj
 	+$(call kbuild,$(busybox-dir),$*,$|)
