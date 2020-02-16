@@ -19,6 +19,12 @@ kbuild = $(MAKE) CROSS_COMPILE=$(call tc,$(2))- ARCH=$(call karch,$(2)) O=../$(3
 		-C $(1) $(4)
 kinstall = $(if $(filter $(1),arm),zinstall,install)
 
+all: \
+	aarch64-$(sysroot).tar.xz \
+	arm-$(sysroot).tar.xz \
+	powerpc-$(sysroot).tar.xz \
+	x86_64-$(sysroot).tar.xz
+
 %-$(sysroot).tar.xz: %-$(sysroot)/init
 	tar cJf $@ $(dir $<)
 
