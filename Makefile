@@ -41,7 +41,7 @@ all: \
 %-$(sysroot)/boot/vmlinuz-$(kernel-ver): %-kernel-obj/vmlinux | %-$(sysroot)/boot
 	+$(call kbuild,$(kernel-dir),$*,$(dir $<),INSTALL_PATH=$(CURDIR)/$(dir $@) $(call kinstall,$*))
 
-powerpc-$(sysroot)/boot/vmlinuz-$(kernel-ver): powerpc-kernel-obj/arch/powerpc/boot/zImage |powerpc-$(sysroot)/boot
+powerpc-$(sysroot)/boot/vmlinuz-$(kernel-ver): powerpc-kernel-obj/arch/powerpc/boot/zImage | powerpc-$(sysroot)/boot
 	cp $< $@
 
 powerpc-kernel-obj/arch/powerpc/boot/zImage: powerpc-kernel-obj/.config | powerpc-kernel-obj
@@ -81,7 +81,13 @@ $(busybox-tar):
 	wget -q $(busybox-url)
 
 
-%-$(sysroot) %-$(sysroot)/boot %-$(sysroot)/usr %-kernel-obj %-busybox-obj:
+%-$(sysroot) %-$(sysroot)/boot:
+	mkdir -p $@
+%-$(sysroot)/usr:
+	mkdir -p $@
+%-kernel-obj:
+	mkdir -p $@
+%-busybox-obj:
 	mkdir -p $@
 
 .SECONDARY:
