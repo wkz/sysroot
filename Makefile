@@ -29,19 +29,19 @@ kinstall = $(if $(filter $(1),arm),zinstall,install)
 			%-$(sysroot)/bin/busybox
 	$(call tc,$*)-populate -m -s skel/ -d $*-$(sysroot)/ -l c:m
 
-%-$(sysroot)/usr/include/linux/version.h: %-kernel-obj/vmlinux |%-$(sysroot)/usr
+%-$(sysroot)/usr/include/linux/version.h: %-kernel-obj/vmlinux | %-$(sysroot)/usr
 	+$(call kbuild,$(kernel-dir),$*,$(dir $<),INSTALL_HDR_PATH=$(CURDIR)/$*-$(sysroot)/usr headers_install)
 
-%-$(sysroot)/boot/vmlinuz-$(kernel-ver): %-kernel-obj/vmlinux |%-$(sysroot)/boot
+%-$(sysroot)/boot/vmlinuz-$(kernel-ver): %-kernel-obj/vmlinux | %-$(sysroot)/boot
 	+$(call kbuild,$(kernel-dir),$*,$(dir $<),INSTALL_PATH=$(CURDIR)/$(dir $@) $(call kinstall,$*))
 
-%-kernel-config: $(kernel-dir)/Makefile |%-kernel-obj
+%-kernel-config: $(kernel-dir)/Makefile | %-kernel-obj
 	$(call kbuild,$(kernel-dir),$*,$|,$(CONFIG))
 
-%-kernel-obj/vmlinux: %-kernel-obj/.config |%-kernel-obj
+%-kernel-obj/vmlinux: %-kernel-obj/.config | %-kernel-obj
 	+$(call kbuild,$(kernel-dir),$*,$|)
 
-%-kernel-obj/.config: %-kernel.config $(kernel-dir)/Makefile |%-kernel-obj
+%-kernel-obj/.config: %-kernel.config $(kernel-dir)/Makefile | %-kernel-obj
 	cp $< $@
 
 $(kernel-dir)/Makefile: $(kernel-tar)
@@ -50,17 +50,17 @@ $(kernel-tar):
 	wget -q $(kernel-url)
 
 
-%-$(sysroot)/bin/busybox: %-busybox-obj/busybox |%-$(sysroot)
+%-$(sysroot)/bin/busybox: %-busybox-obj/busybox | %-$(sysroot)
 	+$(call kbuild,$(busybox-dir),$*,$(dir $<),install) && \
 		cp -a $(dir $<)/_install/* $*-$(sysroot)/
 
-%-busybox-config: $(busybox-dir)/Makefile |%-busybox-obj
+%-busybox-config: $(busybox-dir)/Makefile | %-busybox-obj
 	$(call kbuild,$(busybox-dir),$*,$|,$(CONFIG))
 
-%-busybox-obj/busybox: %-busybox-obj/.config |%-busybox-obj
+%-busybox-obj/busybox: %-busybox-obj/.config | %-busybox-obj
 	+$(call kbuild,$(busybox-dir),$*,$|)
 
-%-busybox-obj/.config: busybox.config $(busybox-dir)/Makefile |%-busybox-obj
+%-busybox-obj/.config: busybox.config $(busybox-dir)/Makefile | %-busybox-obj
 	cp $< $@
 
 $(busybox-dir)/Makefile: $(busybox-tar)
