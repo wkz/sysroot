@@ -35,6 +35,12 @@ kinstall = $(if $(filter $(1),arm),zinstall,install)
 %-$(sysroot)/boot/vmlinuz-$(kernel-ver): %-kernel-obj/vmlinux | %-$(sysroot)/boot
 	+$(call kbuild,$(kernel-dir),$*,$(dir $<),INSTALL_PATH=$(CURDIR)/$(dir $@) $(call kinstall,$*))
 
+powerpc-$(sysroot)/boot/vmlinuz-$(kernel-ver): powerpc-kernel-obj/arch/powerpc/boot/zImage |powerpc-$(sysroot)/boot
+	cp $< $@
+
+powerpc-kernel-obj/arch/powerpc/boot/zImage: powerpc-kernel-obj/.config | powerpc-kernel-obj
+	+$(call kbuild,$(kernel-dir),powerpc,$|,zImage)
+
 %-kernel-config: $(kernel-dir)/Makefile | %-kernel-obj
 	$(call kbuild,$(kernel-dir),$*,$|,$(CONFIG))
 
