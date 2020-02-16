@@ -81,7 +81,9 @@ $(busybox-tar):
 	wget -q $(busybox-url)
 
 
-%-$(sysroot) %-$(sysroot)/boot:
+%-$(sysroot):
+	mkdir -p $@
+%-$(sysroot)/boot:
 	mkdir -p $@
 %-$(sysroot)/usr:
 	mkdir -p $@
