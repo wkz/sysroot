@@ -44,7 +44,7 @@ all: \
 powerpc-$(sysroot)/boot/vmlinuz-$(kernel-ver): powerpc-kernel-obj/arch/powerpc/boot/zImage | powerpc-$(sysroot)/boot
 	cp $< $@
 
-powerpc-kernel-obj/arch/powerpc/boot/zImage: powerpc-kernel-obj/.config | powerpc-kernel-obj
+powerpc-kernel-obj/arch/powerpc/boot/zImage: powerpc-kernel-obj/vmlinux | powerpc-kernel-obj
 	+$(call kbuild,$(kernel-dir),powerpc,$|,zImage)
 
 %-kernel-config: $(kernel-dir)/Makefile | %-kernel-obj
