@@ -50,7 +50,7 @@ powerpc-kernel-obj/arch/powerpc/boot/zImage: powerpc-kernel-obj/vmlinux | powerp
 %-kernel-config: $(kernel-dir)/Makefile | %-kernel-obj
 	$(call kbuild,$(kernel-dir),$*,$|,$(CONFIG))
 
-%-kernel-obj/vmlinux: %-kernel-obj/.config | %-kernel-obj
+%-kernel-obj/vmlinux: %-kernel-obj/.config $(kernel-dir)/Makefile | %-kernel-obj
 	+$(call kbuild,$(kernel-dir),$*,$|)
 
 %-kernel-obj/.config: %-kernel.config $(kernel-dir)/Makefile | %-kernel-obj
