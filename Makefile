@@ -1,6 +1,6 @@
 CONFIG ?= menuconfig
 
-kernel-ver := 5.5.1
+kernel-ver := 5.5.8
 kernel-maj := $(word 1,$(subst ., ,$(kernel-ver)))
 kernel-dir := linux-$(kernel-ver)
 kernel-tar := $(kernel-dir).tar.xz
